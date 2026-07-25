@@ -20,5 +20,14 @@ export function Dashboard() {
     {state === 'ready' && <><section aria-label="Business metrics" className="grid gap-4 sm:grid-cols-3"><Metric label={t('totalInvoiced')} value={money(metrics.invoiced)} icon={ReceiptText} color="text-brand-green" /><Metric label={t('collected')} value={money(metrics.collected)} icon={Landmark} color="text-brand-blue" /><Metric label={t('needsReview')} value={String(metrics.review)} icon={CircleAlert} color="text-brand-orange" /></section>
       <section className="mt-6 grid gap-6 lg:grid-cols-2"><InvoiceForm onCreated={refresh} /><ReconciliationPanel onUpdated={refresh} /></section>
       <section className="card mt-6" aria-labelledby="transactions-heading"><h2 id="transactions-heading" className="mb-4 text-lg font-bold">{t('recentTransactions')}</h2><div className="overflow-x-auto"><table className="w-full min-w-[620px] text-left text-sm"><thead className="border-b text-slate-600"><tr><th className="p-2">{t('transactionId')}</th><th className="p-2">{t('amount')}</th><th className="p-2">{t('status')}</th><th className="p-2">Date</th></tr></thead><tbody>{transactions.length ? transactions.map((transaction) => <tr key={transaction.id} className="border-b last:border-0"><td className="p-2 font-mono text-xs">{transaction.external_transaction_id ?? '—'}</td><td className="p-2 font-medium"><IndianRupee className="mr-1 inline size-3" aria-hidden="true" />{money(transaction.amount_paise)}</td><td className="p-2"><span className="rounded-full bg-slate-100 px-2 py-1 text-xs">{transaction.reconciliation_status}</span></td><td className="p-2">{new Date(transaction.transaction_at).toLocaleDateString()}</td></tr>) : <tr><td colSpan={4} className="p-6 text-center text-slate-500">{t('noData')}</td></tr>}</tbody></table></div></section>
+      <footer className="mt-12 text-center text-xs text-slate-500 border-t border-slate-200 pt-6 pb-4">
+        <p className="inline-flex items-center gap-1.5 font-medium text-slate-600">
+          <span>⚡ Built on <strong className="text-slate-900">Codex</strong></span>
+          <span>•</span>
+          <a href="https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI" target="_blank" rel="noopener noreferrer" className="hover:text-brand-green underline decoration-slate-300 underline-offset-4">
+            VYAPAARSAATHI.AI GitHub Repository
+          </a>
+        </p>
+      </footer>
     </>}</main>;
 }

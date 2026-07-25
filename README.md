@@ -1,9 +1,10 @@
-<<<<<<< HEAD
 # VYAPAARSAATHI.AI
-=======
-# VyapaarSathi AI
 
-VyapaarSathi AI is a secure, bilingual business-operations suite for Indian small businesses. It turns routine work—GST invoice generation, UPI CSV reconciliation, compliance reminders, and spoken invoice capture—into a single workflow.
+[![Built on Codex](https://img.shields.io/badge/Built%20on-Codex-7C3AED?style=for-the-badge&logo=codefactor)](https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI)
+[![Deploy on Vercel](https://img.shields.io/badge/Deploy%20Frontend-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNisarg2204ai%2FVYAPAARSAATHI.AI&root-directory=frontend)
+[![Deploy Backend to Render](https://img.shields.io/badge/Deploy%20Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI)
+
+VyapaarSathi AI is a secure, bilingual business-operations suite for Indian small businesses built on **Codex**. It turns routine work—GST invoice generation, UPI CSV reconciliation, compliance reminders, and spoken invoice capture—into a single workflow.
 
 ## Value proposition
 
@@ -149,4 +150,3 @@ python -m compileall -q voice/voice_to_invoice.py
 ```
 
 Commit the generated `package-lock.json` after the first `npm install`; then replace CI's `npm install` commands with `npm ci` for fully locked dependency builds.
->>>>>>> 7703cb2 (Initial VyapaarSathi AI release)
