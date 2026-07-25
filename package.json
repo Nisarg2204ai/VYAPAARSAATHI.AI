@@ -1,0 +1,10 @@
+{
+  "name": "vyapaarsathi-ai",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "check": "npm run check --workspace=backend && npm run check --workspace=frontend"
+  },
+  "engines": { "node": ">=20.11" }
+}
