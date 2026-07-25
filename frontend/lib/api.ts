@@ -9,7 +9,8 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
   if (!token) throw new Error('AUTH_REQUIRED');
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'}${path}`, {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+  const response = await fetch(`${baseUrl}${path}`, {
     ...init, headers: { authorization: `Bearer ${token}`, ...(init.body instanceof FormData ? {} : { 'content-type': 'application/json' }), ...init.headers }
   });
   const body = await response.json().catch(() => ({}));
