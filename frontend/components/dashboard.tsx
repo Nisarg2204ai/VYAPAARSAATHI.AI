@@ -1,16 +1,19 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { 
   CircleAlert, IndianRupee, Landmark, ReceiptText, Mic, Sparkles, 
   TrendingUp, Calendar, CheckCircle2, RefreshCw, ArrowUpRight, 
-  ShieldCheck, Zap, Bell, FileText, UploadCloud
+  ShieldCheck, Zap, Bell, FileText, UploadCloud, ChevronRight, Award
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api, type Invoice, type Transaction } from '../lib/api';
 import { LanguageSwitcher } from './language-switcher';
 import { InvoiceForm } from './invoice-form';
 import { ReconciliationPanel } from './reconciliation-panel';
+import { PaytmSoundbox } from './paytm-soundbox';
+import { AdvancedVisualizations } from './advanced-visualizations';
 
 const money = (paise: number) => 
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(paise / 100);
@@ -19,17 +22,17 @@ function MetricCard({ label, value, subtext, icon: Icon, gradient, badge }: {
   label: string; value: string; subtext?: string; icon: typeof ReceiptText; gradient: string; badge?: string 
 }) {
   return (
-    <div className="card glass-card-glow relative overflow-hidden group">
-      <div className={`absolute -right-6 -bottom-6 size-24 rounded-full opacity-15 blur-xl ${gradient}`} />
+    <div className="card glass-card-glow relative overflow-hidden group border border-[#00A3E0]/20 bg-[#081630]">
+      <div className={`absolute -right-6 -bottom-6 size-24 rounded-full opacity-20 blur-xl ${gradient}`} />
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</p>
+        <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400 font-['Montserrat']">{label}</p>
         <div className={`rounded-xl p-2.5 text-white shadow-md ${gradient}`}>
           <Icon className="size-5" />
         </div>
       </div>
-      <p className="mt-3 text-3xl font-extrabold tracking-tight text-white">{value}</p>
-      {subtext && <p className="mt-1 text-xs text-slate-400 flex items-center gap-1"><TrendingUp className="size-3 text-emerald-400 inline" /> {subtext}</p>}
-      {badge && <span className="mt-2 inline-block rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-amber-400 border border-amber-500/20">{badge}</span>}
+      <p className="mt-3 text-3xl font-black tracking-tight text-white font-['Montserrat']">{value}</p>
+      {subtext && <p className="mt-1 text-xs text-slate-300 flex items-center gap-1 font-semibold"><TrendingUp className="size-3 text-[#00A3E0] inline" /> {subtext}</p>}
+      {badge && <span className="mt-2 inline-block rounded-full bg-[#E2A925]/10 px-2.5 py-0.5 text-[11px] font-extrabold text-[#E2A925] border border-[#E2A925]/30">{badge}</span>}
     </div>
   );
 }
@@ -88,91 +91,186 @@ export function Dashboard() {
   };
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      {/* Header Banner */}
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-6 border-b border-slate-800/80 pb-6">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="rounded-md bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-400 border border-emerald-500/20">
-              API Connected (Render)
-            </span>
-            <span className="rounded-md bg-indigo-500/10 px-2.5 py-0.5 text-xs font-bold text-indigo-400 border border-indigo-500/20">
-              ⚡ Powered by Codex
-            </span>
-          </div>
-          <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-            VyapaarSathi <span className="gradient-text">AI Operations Suite</span>
-          </h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Automated GST Billing • UPI Reconciliation • Spoken Invoice Capture
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <button 
-            onClick={() => setIsVoiceOpen(true)}
-            className="button-primary bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-indigo-500/20"
-          >
-            <Mic className="size-4 animate-bounce" />
-            <span>Spoken Invoice AI</span>
-          </button>
-          <LanguageSwitcher />
-        </div>
-      </header>
-
-      {/* GST Filing Radar Banner */}
-      <section className="mb-8 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/60 to-slate-900 p-5 border border-indigo-500/20 shadow-xl flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="rounded-xl bg-indigo-500/20 p-3 text-indigo-400 border border-indigo-500/30">
-            <Calendar className="size-6" />
-          </div>
+    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-8 font-['Montserrat',sans-serif]">
+      
+      {/* DIVISION 1: Executive Brand Header & Vitality Bar */}
+      <section className="division-box border border-[#00A3E0]/30 bg-gradient-to-r from-[#003B71] via-[#081630] to-[#030914]">
+        <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">GST Compliance Radar</span>
-              <span className="size-1.5 rounded-full bg-indigo-400" />
-              <span className="text-xs text-slate-300">GSTR-1 & GSTR-3B</span>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="flex size-2.5 rounded-full bg-[#00A3E0] animate-pulse" />
+              <span className="rounded-full bg-[#00A3E0]/15 px-3 py-0.5 text-xs font-black text-[#00A3E0] border border-[#00A3E0]/30 uppercase tracking-wider">
+                ADANI BRAND TYPOGRAPHY (MONTSERRAT)
+              </span>
+              <span className="rounded-full bg-[#E2A925]/15 px-3 py-0.5 text-xs font-black text-[#E2A925] border border-[#E2A925]/30 uppercase tracking-wider">
+                MSME APPROVED ECOSYSTEM
+              </span>
             </div>
-            <p className="text-sm font-semibold text-white mt-0.5">
-              Filing Due in <strong className="text-amber-400">5 Days</strong> (July 2026 Cycle) • Estimated GST: <strong className="text-emerald-400">{money(metrics.gstTax)}</strong>
+            <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl text-white">
+              VyapaarSathi <span className="gradient-text-adani">AI Operations Suite</span>
+            </h1>
+            <p className="mt-1 text-xs sm:text-sm text-slate-300 font-medium">
+              Automated GST Billing • Paytm & PhonePe Soundbox Terminal • MSME Subsidies Engine
             </p>
           </div>
-        </div>
 
-        <button 
-          onClick={dispatchReminder} 
-          disabled={reminderSent}
-          className="button-secondary text-xs flex items-center gap-2 py-2"
-        >
-          {reminderSent ? <CheckCircle2 className="size-4 text-emerald-400" /> : <Bell className="size-4 text-indigo-400" />}
-          <span>{reminderSent ? 'Reminders Sent via Webhook!' : 'Dispatch GST Reminders'}</span>
-        </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button 
+              onClick={() => setIsVoiceOpen(true)}
+              className="button-primary"
+            >
+              <Mic className="size-4 animate-bounce text-white" />
+              <span>Spoken Invoice AI</span>
+            </button>
+            <LanguageSwitcher />
+          </div>
+        </div>
       </section>
 
-      {/* Financial Metrics Cards */}
-      <section aria-label="Business metrics" className="grid gap-5 sm:grid-cols-3">
-        <MetricCard 
-          label={t('totalInvoiced')} 
-          value={money(metrics.invoiced)} 
-          subtext="18% GST inclusive"
-          icon={ReceiptText} 
-          gradient="bg-gradient-to-br from-emerald-500 to-teal-700" 
-        />
-        <MetricCard 
-          label={t('collected')} 
-          value={money(metrics.collected)} 
-          subtext="Auto-reconciled via UPI"
-          icon={Landmark} 
-          gradient="bg-gradient-to-br from-blue-500 to-indigo-700" 
-        />
-        <MetricCard 
-          label={t('needsReview')} 
-          value={String(metrics.review)} 
-          badge="High Priority"
-          subtext="Pending human verification"
-          icon={CircleAlert} 
-          gradient="bg-gradient-to-br from-amber-500 to-orange-700" 
-        />
+      {/* DIVISION 2: GST Compliance Radar & Financial Metrics Division */}
+      <div className="space-y-6">
+        <section className="rounded-3xl bg-gradient-to-r from-[#003B71]/60 via-[#081630] to-[#003B71]/40 p-5 border border-[#00A3E0]/30 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="rounded-2xl bg-[#00A3E0]/20 p-3 text-[#00A3E0] border border-[#00A3E0]/40">
+              <Calendar className="size-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black uppercase tracking-wider text-[#00A3E0]">DIVISION 2: GST Compliance Radar</span>
+                <span className="size-1.5 rounded-full bg-[#00A3E0]" />
+                <span className="text-xs text-slate-300 font-bold">GSTR-1 & GSTR-3B</span>
+              </div>
+              <p className="text-sm font-bold text-white mt-0.5">
+                Filing Due in <strong className="text-[#E2A925] font-black">5 Days</strong> (July 2026 Cycle) • Estimated GST: <strong className="text-[#00A3E0] font-black">{money(metrics.gstTax)}</strong>
+              </p>
+            </div>
+          </div>
+
+          <button 
+            onClick={dispatchReminder} 
+            disabled={reminderSent}
+            className="button-secondary text-xs"
+          >
+            {reminderSent ? <CheckCircle2 className="size-4 text-emerald-400" /> : <Bell className="size-4 text-[#00A3E0]" />}
+            <span>{reminderSent ? 'Reminders Sent via Webhook!' : 'Dispatch GST Reminders'}</span>
+          </button>
+        </section>
+
+        {/* Financial Metrics Cards */}
+        <section aria-label="Business metrics" className="grid gap-5 sm:grid-cols-3">
+          <MetricCard 
+            label={t('totalInvoiced')} 
+            value={money(metrics.invoiced)} 
+            subtext="18% GST inclusive"
+            icon={ReceiptText} 
+            gradient="bg-gradient-to-br from-[#003B71] to-[#00A3E0]" 
+          />
+          <MetricCard 
+            label={t('collected')} 
+            value={money(metrics.collected)} 
+            subtext="Auto-reconciled via UPI"
+            icon={Landmark} 
+            gradient="bg-gradient-to-br from-[#00A3E0] to-emerald-600" 
+          />
+          <MetricCard 
+            label={t('needsReview')} 
+            value={String(metrics.review)} 
+            badge="High Priority"
+            subtext="Pending human verification"
+            icon={CircleAlert} 
+            gradient="bg-gradient-to-br from-[#E2A925] to-orange-600" 
+          />
+        </section>
+      </div>
+
+      {/* DIVISION 3: Advanced Data Visualization Suite */}
+      <AdvancedVisualizations />
+
+      {/* DIVISION 4 & 5: Paytm Soundbox & MSME Schemes Spotlight Grid */}
+      <section className="grid gap-8 lg:grid-cols-12">
+        {/* DIVISION 4: Paytm/PhonePe Smart Soundbox Terminal (7 cols) */}
+        <div className="lg:col-span-7">
+          <PaytmSoundbox onPaymentReceived={(amount, payer) => {
+            setTransactions(prev => [
+              {
+                id: `t_${Date.now()}`,
+                external_transaction_id: `UPI-${Date.now().toString().slice(-6)}`,
+                amount_paise: amount * 100,
+                direction: 'credit',
+                transaction_at: new Date().toISOString(),
+                payer_name: payer,
+                reconciliation_status: 'matched',
+                match_confidence: 0.99,
+                anomaly_flags: []
+              },
+              ...prev
+            ]);
+          }} />
+        </div>
+
+        {/* DIVISION 5: MSME Approved Govt Schemes & Subsidies Spotlight Card (5 cols) */}
+        <div className="lg:col-span-5 rounded-3xl border border-[#E2A925]/30 bg-gradient-to-b from-[#081630] via-[#030914] to-[#081630] p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#E2A925]/10 blur-3xl pointer-events-none" />
+
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="rounded-full bg-[#E2A925]/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#E2A925] border border-[#E2A925]/30">
+                DIVISION 5: MSME GOVT SCHEMES
+              </span>
+              <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5" /> Udyam Verified
+              </span>
+            </div>
+
+            <h3 className="text-xl font-black text-white leading-tight">
+              Pre-Approved MSME Capital <br />
+              <span className="gradient-text-adani">
+                Subsidies & Loans
+              </span>
+            </h3>
+
+            <p className="text-xs text-slate-300 mt-2 leading-relaxed font-medium">
+              Explore PMEGP 35% margin money grants, Mudra collateral-free credit up to ₹10L, CGTMSE coverage & RBI TReDS invoice discounting.
+            </p>
+
+            {/* Top 3 Quick Scheme Highlights */}
+            <div className="mt-4 space-y-2.5">
+              <div className="p-3 rounded-2xl bg-[#030914] border border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-black text-[#E2A925]">PMEGP Grant Scheme</p>
+                  <p className="text-[11px] text-slate-400">Up to 35% Govt Capital Subsidy</p>
+                </div>
+                <span className="text-xs font-bold text-white bg-[#E2A925]/10 px-2.5 py-1 rounded-lg border border-[#E2A925]/30">Max ₹50L</span>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#030914] border border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-black text-[#00A3E0]">PMMY Mudra Loans</p>
+                  <p className="text-[11px] text-slate-400">100% Collateral-Free Working Capital</p>
+                </div>
+                <span className="text-xs font-bold text-white bg-[#00A3E0]/10 px-2.5 py-1 rounded-lg border border-[#00A3E0]/30">Max ₹10L</span>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-[#030914] border border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-black text-emerald-400">RBI TReDS Discounting</p>
+                  <p className="text-[11px] text-slate-400">24-Hour Instant Invoice Cash</p>
+                </div>
+                <span className="text-xs font-bold text-white bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/30">Immediate</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-800">
+            <Link
+              href="/schemes"
+              className="w-full button-primary py-3 text-xs"
+            >
+              <span>OPEN FULL MSME SCHEMES PORTAL</span>
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
       </section>
 
       {/* Main Operations Grid */}

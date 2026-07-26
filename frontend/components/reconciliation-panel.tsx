@@ -5,7 +5,7 @@ import { FileUp, WandSparkles, CheckCircle2, UploadCloud, FileSpreadsheet } from
 import { useTranslation } from 'react-i18next';
 import { api } from '../lib/api';
 
-export function ReconciliationPanel({ onUpdated }: { onUpdated: () => Promise<void> }) {
+export function ReconciliationPanel({ onUpdated }: { onUpdated?: () => Promise<void> }) {
   const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
@@ -19,11 +19,11 @@ export function ReconciliationPanel({ onUpdated }: { onUpdated: () => Promise<vo
     setMessage('');
     try {
       const result = await api.uploadCsv(file);
-      await onUpdated();
+      if (onUpdated) await onUpdated();
       setMessage(t('importSuccess', { count: result.imported || 3 }));
     } catch {
       setMessage('Demo UPI Statement Imported (3 Transactions)!');
-      await onUpdated();
+      if (onUpdated) await onUpdated();
     } finally {
       setBusy(false);
     }
@@ -34,11 +34,11 @@ export function ReconciliationPanel({ onUpdated }: { onUpdated: () => Promise<vo
     setMessage('');
     try {
       const result = await api.reconcile();
-      await onUpdated();
+      if (onUpdated) await onUpdated();
       setMessage(t('reconcileSuccess', { count: result.matched || 2 }));
     } catch {
       setMessage('Smart AI Reconciliation complete! 2 Candidate Matches verified.');
-      await onUpdated();
+      if (onUpdated) await onUpdated();
     } finally {
       setBusy(false);
     }

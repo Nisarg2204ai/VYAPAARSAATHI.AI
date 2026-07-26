@@ -8,7 +8,7 @@ import { api } from '../lib/api';
 type Line = { description: string; quantity: number; unitPrice: number };
 const today = new Date().toISOString().slice(0, 10);
 
-export function InvoiceForm({ onCreated }: { onCreated: () => Promise<void> }) {
+export function InvoiceForm({ onCreated }: { onCreated?: () => Promise<void> }) {
   const { t } = useTranslation();
   const [customerName, setCustomerName] = useState('');
   const [invoiceDate, setInvoiceDate] = useState(today);
@@ -48,11 +48,11 @@ export function InvoiceForm({ onCreated }: { onCreated: () => Promise<void> }) {
       setDueDate('');
       setNotes('');
       setLines([{ description: '', quantity: 1, unitPrice: 0 }]);
-      await onCreated();
+      if (onCreated) await onCreated();
       setMessage('Invoice generated successfully with PDF!');
     } catch {
       setMessage('Demo Invoice Created!');
-      await onCreated();
+      if (onCreated) await onCreated();
     } finally {
       setBusy(false);
     }

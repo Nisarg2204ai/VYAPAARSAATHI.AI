@@ -1,24 +1,9 @@
 services:
   - type: web
-    name: vyapaarsathi-api
-    runtime: node
-    rootDir: backend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    healthCheckPath: /health
-    autoDeploy: false
+    name: vyapaarsathi-ai-frontend
+    env: node
+    buildCommand: npm install && npm run build --workspace=frontend
+    startCommand: npm run start --workspace=frontend
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
-      - key: FRONTEND_ORIGIN
-        sync: false
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
-      - key: CRON_SECRET
-        generateValue: true
-      - key: NOTIFICATION_WEBHOOK_URL
-        sync: false

@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import pinoHttp from 'pino-http';
+import { pinoHttp } from 'pino-http';
 import { env } from './config/env.js';
 import { errorHandler, notFound } from './lib/errors.js';
 import { logger } from './lib/logger.js';
