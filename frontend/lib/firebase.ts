@@ -1,4 +1,4 @@
-// Firebase Auth and Firestore Client Container for Free Spark Plan
+// Firebase Auth and Firestore Client Container for Project vyapaarsathi-43073
 
 export interface FirebaseConfig {
   apiKey: string;
@@ -7,15 +7,17 @@ export interface FirebaseConfig {
   storageBucket: string;
   messagingSenderId: string;
   appId: string;
+  measurementId?: string;
 }
 
 export const firebaseConfig: FirebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDemoVyapaarSathiKey123456789",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "vyapaarsathi-ai.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "vyapaarsathi-ai",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "vyapaarsathi-ai.appspot.com",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "987654321012",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:987654321012:web:a1b2c3d4e5f6a7b8"
+  apiKey: "AIzaSyBIgxBdmWH2H0v05CApoGNuvoW9vwHaM1c",
+  authDomain: "vyapaarsathi-43073.firebaseapp.com",
+  projectId: "vyapaarsathi-43073",
+  storageBucket: "vyapaarsathi-43073.firebasestorage.app",
+  messagingSenderId: "590535619738",
+  appId: "1:590535619738:web:b82a4d2d4c3ef59b861b23",
+  measurementId: "G-5ZQC2J08E7"
 };
 
 export interface FirebaseUser {
