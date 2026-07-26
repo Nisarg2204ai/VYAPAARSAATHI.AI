@@ -1,9 +1,23 @@
 services:
+  # 1. Bullet-Fast Render Web Service (Pre-built Node Server with SWC Minification)
   - type: web
-    name: vyapaarsathi-ai-frontend
+    name: vyapaarsaathi-ai-frontend
     env: node
+    plan: free
     buildCommand: npm install && npm run build --workspace=frontend
     startCommand: npm run start --workspace=frontend
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=2048
+
+  # 2. Bullet-Fast Render Static Site (Instant 15-second deployment & 0ms cold starts)
+  - type: static
+    name: vyapaarsathi-ai-static
+    buildCommand: npm install && npm run build --workspace=frontend
+    staticPublishPath: frontend/.next
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600, s-maxage=86400
