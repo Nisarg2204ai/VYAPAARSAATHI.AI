@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Globe, Check } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { INDIAN_LANGUAGES } from '../lib/i18n';
 
@@ -13,6 +13,25 @@ export function LanguageSwitcher() {
     void i18n.changeLanguage(code);
     if (typeof window !== 'undefined') {
       window.localStorage.setItem('vyapaarsathi-language', code);
+
+      const domain = window.location.hostname;
+      if (code === 'en') {
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=.${domain}; path=/;`;
+        document.cookie = 'googtrans=/en/en; path=/;';
+      } else {
+        document.cookie = `googtrans=/en/${code}; path=/;`;
+        document.cookie = `googtrans=/en/${code}; domain=.${domain}; path=/;`;
+      }
+
+      // Trigger Google Translate live update if combo exists, else reload for cookie application
+      const selectElem = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
+      if (selectElem) {
+        selectElem.value = code;
+        selectElem.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
     }
   };
 
@@ -38,3 +57,4 @@ export function LanguageSwitcher() {
     </div>
   );
 }
+

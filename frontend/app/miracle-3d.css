@@ -1,0 +1,104 @@
+/* ==========================================================================
+   VYAPAARSATHI AI — LIGHTWEIGHT FINTECH DESIGN SYSTEM
+   Zero-Lag, Hardware-Accelerated (GPU Optimized for Low-End Devices)
+   ========================================================================== */
+
+:root {
+  --miracle-amber: #E8A849;
+  --miracle-gold: #F59E0B;
+  --miracle-blue: #3B82F6;
+  --miracle-navy: #0F172A;
+  --miracle-card-bg: rgba(15, 23, 42, 0.92);
+  --miracle-glass-border: rgba(232, 168, 73, 0.25);
+  --miracle-glass-border-hover: rgba(232, 168, 73, 0.55);
+}
+
+html.miracle-3d-active,
+body.miracle-3d-active {
+  background-color: var(--miracle-navy) !important;
+  color: #F8FAFC !important;
+  scroll-behavior: smooth !important;
+}
+
+/* Header Typography */
+body.miracle-3d-active h1,
+body.miracle-3d-active h2,
+body.miracle-3d-active h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Gradient Accent Text */
+body.miracle-3d-active .gradient-text-claude {
+  background: linear-gradient(135deg, #E8A849 0%, #F59E0B 40%, #3B82F6 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Fast, Lightweight Cards (No GPU Blur Thrashing) */
+body.miracle-3d-active .glass-card,
+body.miracle-3d-active .card,
+body.miracle-3d-active .division-box {
+  background: var(--miracle-card-bg) !important;
+  border: 1px solid var(--miracle-glass-border) !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 1.25rem !important;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+body.miracle-3d-active .glass-card:hover,
+body.miracle-3d-active .card:hover,
+body.miracle-3d-active .division-box:hover {
+  border-color: var(--miracle-glass-border-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(232, 168, 73, 0.15) !important;
+}
+
+/* Primary & Secondary Buttons */
+body.miracle-3d-active .button-primary {
+  background: linear-gradient(135deg, #E8A849 0%, #D97706 50%, #3B82F6 100%) !important;
+  color: #0F172A !important;
+  font-weight: 800 !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(232, 168, 73, 0.3) !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.miracle-3d-active .button-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(232, 168, 73, 0.45) !important;
+}
+
+body.miracle-3d-active .button-secondary {
+  border: 1px solid rgba(232, 168, 73, 0.3) !important;
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #F8FAFC !important;
+  transition: transform 0.15s ease, background 0.15s ease !important;
+}
+
+body.miracle-3d-active .button-secondary:hover {
+  background: rgba(232, 168, 73, 0.15) !important;
+  border-color: #E8A849 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Scroll Progress Bar */
+.miracle-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #E8A849 0%, #F59E0B 50%, #3B82F6 100%);
+  z-index: 99999;
+}
+
+/* Smooth Scroll Reveal */
+body.miracle-3d-active .miracle-reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+body.miracle-3d-active .miracle-reveal-item.miracle-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
