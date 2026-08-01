@@ -102,30 +102,23 @@ export default function WelcomePage() {
             Paytm & PhonePe style Smart Voice Soundbox, MSME Govt Schemes (PMEGP, Mudra), Automated GST Billing & AI CFO Financial Advisor for Bharat&apos;s enterprises.
           </p>
 
-          {/* Enter Dashboard & Auth Actions */}
+          {/* Enter Dashboard, Vyapari Demo & Auth Actions */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <Link
+              href="/vyapari"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 px-8 py-3 text-sm font-black text-slate-950 shadow-xl shadow-emerald-500/20 hover:from-emerald-400 hover:to-teal-400 transition-all transform hover:-translate-y-0.5"
+            >
+              <Sparkles className="h-4 w-4 fill-current" />
+              <span>Launch Vyapari Assistant</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+
             <button
               onClick={handleEnterDashboard}
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-full bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 px-8 py-3 text-sm font-extrabold text-white shadow-xl shadow-rose-600/30 hover:from-rose-500 hover:to-amber-400 transition-all transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-full border border-slate-700 bg-slate-800/80 px-6 py-3 text-xs font-bold text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
             >
-              <span>{user ? 'Enter Dashboard' : 'Sign In / Register First'}</span>
-              <ArrowRight className="h-4 w-4" />
+              <span>{user ? 'Enter Full Dashboard' : 'Sign In / Register'}</span>
             </button>
-
-            {!user ? (
-              <button
-                onClick={() => setIsAuthOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-full border border-slate-700 bg-slate-800/80 px-5 py-3 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition-colors"
-              >
-                <Lock className="h-3.5 w-3.5 text-amber-400" />
-                <span>Register Credentials</span>
-              </button>
-            ) : (
-              <div className="flex items-center space-x-1.5 px-4 py-2.5 rounded-full bg-slate-950 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
-                <UserCheck className="h-3.5 w-3.5" />
-                <span>LoggedIn: {user.businessName}</span>
-              </div>
-            )}
           </div>
 
           {/* Avatar Social Proof */}

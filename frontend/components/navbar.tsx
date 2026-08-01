@@ -54,13 +54,14 @@ export function Navbar() {
   };
 
   const handleNavClick = (e: React.MouseEvent, href: string) => {
-    if (!user && href !== '/' && href !== '/about' && href !== '/contact') {
+    if (!user && href !== '/' && href !== '/vyapari' && href !== '/about' && href !== '/contact') {
       e.preventDefault();
       setIsAuthOpen(true);
     }
   };
 
   const navLinks = [
+    { href: '/vyapari', label: 'Vyapari (Kirana AI)', icon: Sparkles },
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/advisor', label: 'CFO AI Advisor', icon: Bot },
     { href: '/schemes', label: 'MSME Schemes', icon: Landmark },

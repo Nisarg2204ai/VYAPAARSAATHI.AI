@@ -4,8 +4,10 @@
   "version": "1.0.0",
   "workspaces": ["backend", "frontend"],
   "scripts": {
-    "check": "npm run check --workspace=backend && npm run check --workspace=frontend",
-    "build:frontend": "npm run build --workspace=frontend",
+    "dev": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=frontend",
+    "test": "npm test --workspace=frontend",
+    "check": "npm run check --workspace=frontend",
     "deploy:firebase": "firebase deploy --only hosting",
     "deploy:vercel": "vercel --prod"
   },

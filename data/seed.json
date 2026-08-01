@@ -1,0 +1,85 @@
+{
+  "products": [
+    { "id": "p1", "name": "cheeni", "displayName": "Cheeni (Sugar)", "price": 45, "unit": "kg" },
+    { "id": "p2", "name": "Parle-G", "displayName": "Parle-G Biscuit", "price": 10, "unit": "pkt" },
+    { "id": "p3", "name": "chai", "displayName": "Chai Patti (Tea Leaves)", "price": 20, "unit": "pkt" },
+    { "id": "p4", "name": "atta", "displayName": "Aashirvaad Atta", "price": 320, "unit": "10kg" },
+    { "id": "p5", "name": "rice", "displayName": "Basmati Rice", "price": 85, "unit": "kg" },
+    { "id": "p6", "name": "oil", "displayName": "Fortune Cooking Oil", "price": 140, "unit": "l" }
+  ],
+  "openInvoices": [
+    {
+      "id": "INV-1001",
+      "customerName": "Ramesh Kumar",
+      "customerPhone": "+919876543210",
+      "upiVpa": "parleg@okaxis",
+      "items": [
+        { "qty": 2, "unit": "kg", "item": "cheeni", "price": 90 },
+        { "qty": 1, "unit": "pkt", "item": "Parle-G", "price": 10 },
+        { "qty": 1, "unit": "pkt", "item": "chai", "price": 20 }
+      ],
+      "totalAmount": 200,
+      "amountPaid": 0,
+      "balanceDue": 200,
+      "date": "2026-07-28T10:30:00.000Z",
+      "dueDate": "2026-07-30T10:30:00.000Z",
+      "status": "OPEN"
+    },
+    {
+      "id": "INV-1002",
+      "customerName": "Priya Sharma",
+      "customerPhone": "+919812345678",
+      "upiVpa": "priya@paytm",
+      "items": [
+        { "qty": 1, "unit": "pkt", "item": "atta", "price": 320 },
+        { "qty": 1, "unit": "l", "item": "oil", "price": 130 }
+      ],
+      "totalAmount": 450,
+      "amountPaid": 0,
+      "balanceDue": 450,
+      "date": "2026-07-29T14:15:00.000Z",
+      "dueDate": "2026-07-31T14:15:00.000Z",
+      "status": "OPEN"
+    },
+    {
+      "id": "INV-1003",
+      "customerName": "Suresh Patel",
+      "customerPhone": "+919988776655",
+      "upiVpa": "suresh@ybl",
+      "items": [
+        { "qty": 10, "unit": "kg", "item": "rice", "price": 850 },
+        { "qty": 2, "unit": "l", "item": "oil", "price": 280 },
+        { "qty": 1, "unit": "pkt", "item": "chai", "price": 70 }
+      ],
+      "totalAmount": 1200,
+      "amountPaid": 0,
+      "balanceDue": 1200,
+      "date": "2026-07-25T11:00:00.000Z",
+      "dueDate": "2026-07-27T11:00:00.000Z",
+      "status": "OPEN"
+    }
+  ],
+  "sampleSmsStrings": [
+    {
+      "id": "sms-1",
+      "bankFormat": "SBI/Axis Standard UPI",
+      "rawText": "Rs.200.00 credited to a/c XX1234 on 30-07-26 from VPA parleg@okaxis (Ramesh Kumar) UPI Ref 123456789012",
+      "expectedMatchInvoiceId": "INV-1001",
+      "expectedBand": "AUTO_MATCH"
+    },
+    {
+      "id": "sms-2",
+      "bankFormat": "HDFC Concise",
+      "rawText": "Credit of INR 450.00 to A/C 9876 via UPI/Priya Sharma/Ref 9876543210",
+      "expectedMatchInvoiceId": "INV-1002",
+      "expectedBand": "AUTO_MATCH"
+    },
+    {
+      "id": "sms-3",
+      "bankFormat": "Truncated / Ambiguous",
+      "rawText": "Rs 100 credited via UPI from R. K. Ref 555111",
+      "expectedMatchInvoiceId": "INV-1001",
+      "expectedBand": "ASK_TO_CONFIRM"
+    }
+  ]
+}

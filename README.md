@@ -1,152 +1,100 @@
-# VYAPAARSAATHI.AI
+# Vyapari — WhatsApp-Style Kirana Assistant
+> **TRACK:** AI Agents for Bharat's Businesses  
+> **Tagline:** Plain-language invoicing, fuzzy UPI reconciliation, GST reminders, and bilingual Hindi voice assistant for Kirana stores.
 
-[![Built on Codex](https://img.shields.io/badge/Built%20on-Codex-7C3AED?style=for-the-badge&logo=codefactor)](https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI)
-[![Deploy on Vercel](https://img.shields.io/badge/Deploy%20Frontend-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNisarg2204ai%2FVYAPAARSAATHI.AI&root-directory=frontend)
-[![Deploy Backend to Render](https://img.shields.io/badge/Deploy%20Backend-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com/deploy?repo=https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI)
+---
 
-VyapaarSathi AI is a secure, bilingual business-operations suite for Indian small businesses built on **Codex**. It turns routine work—GST invoice generation, UPI CSV reconciliation, compliance reminders, and spoken invoice capture—into a single workflow.
+## 🚀 Quick Start (Local Run)
 
-## Value proposition
-
-Small businesses often maintain invoices, UPI payments, and GST dates across paper, spreadsheets, and chat messages. VyapaarSathi AI creates GST-inclusive invoices at 18%, securely reconciles imported UPI statements, warns users three days before a GST filing date, and converts a voice note into a reviewable invoice request.
-
-## Architecture
-
-```mermaid
-flowchart LR
-  U["Business user"] --> W["Next.js dashboard\nEnglish / Hindi"]
-  W -->|"Supabase JWT"| A["Express API on Render"]
-  A -->|"service role only"| S[("Supabase Postgres + RLS")]
-  A --> P["Private Supabase Storage\nInvoice PDFs"]
-  V["Python Whisper pipeline"] -->|"authenticated POST /api/invoices"| A
-  C["GitHub Actions scheduled job"] -->|"cron secret"| A
-  A --> N["Notification webhook\nemail/SMS/WhatsApp provider"]
-  G["GitHub Actions main branch"] --> W
-  G --> A
-```
-
-The browser never receives the Supabase service-role key. It only receives a signed, ten-minute PDF URL after the API validates invoice ownership.
-
-## Repository layout
-
-```text
-backend/                 Express API, Zod validation, PDF generation and reconciliation
-frontend/                Next.js App Router dashboard with Tailwind and i18next
-voice/                   Whisper transcription and voice-to-invoice script
-supabase/migrations/     Schema, RLS, indexes, and private PDF bucket migration
-.github/workflows/       validation, Vercel/Render deployment, and GST reminder dispatch
-```
-
-## Prerequisites
-
-- Node.js 20+
-- Python 3.11+
-- A Supabase project with Email/password or another supported Auth provider enabled
-- Vercel project for `frontend/` and Render Web Service for `backend/`
-
-## Local setup
-
-1. Create a Supabase project, then apply migrations in order:
-
-   ```bash
-   supabase link --project-ref YOUR_PROJECT_REF
-   supabase db push
-   ```
-
-   The first migration creates all tables, indexes, RLS policies, automatic user-profile provisioning, and cross-tenant ownership guards. The second creates a private `invoice-pdfs` bucket.
-
-2. Configure and run the API:
-
-   ```bash
-   cp backend/.env.example backend/.env
-   npm install
-   npm run dev --workspace=@vyapaarsathi/api
-   ```
-
-3. Configure and run the dashboard in another terminal:
-
-   ```bash
-   cp frontend/.env.example frontend/.env.local
-   npm run dev --workspace=@vyapaarsathi/web
-   ```
-
-4. Optionally configure voice invoices:
-
-   ```bash
-   python -m venv .venv
-   . .venv/bin/activate # Windows PowerShell: .venv\Scripts\Activate.ps1
-   pip install -r voice/requirements.txt
-   # Set the variables in voice/.env.example in your shell; do not commit them.
-   python voice/voice_to_invoice.py ./sample.m4a --dry-run
-   ```
-
-## Environment variables
-
-| Location | Required variables |
-| --- | --- |
-| `backend/.env` | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` (32+ characters), `FRONTEND_ORIGIN`, `SUPABASE_INVOICE_BUCKET` |
-| `frontend/.env.local` | `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
-| `voice` shell | `OPENAI_API_KEY`, `VYAPAARSATHI_API_URL`, `SUPABASE_ACCESS_TOKEN` |
-| GitHub secrets | `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RENDER_DEPLOY_HOOK_URL`, `API_BASE_URL`, `CRON_SECRET` |
-
-Never expose `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, OpenAI keys, or a user access token in frontend variables, logs, or Git.
-
-## API surface
-
-All browser-facing routes require `Authorization: Bearer <Supabase access token>`.
-
-| Method | Route | Purpose |
-| --- | --- | --- |
-| `GET` / `POST` | `/api/invoices` | List or create a GST 18% invoice and private PDF |
-| `GET` | `/api/invoices/:id/pdf` | Return a 10-minute signed PDF URL |
-| `POST` | `/api/gst/reminders` | Schedule a filing reminder three days before the due date |
-| `POST` | `/api/gst/cron` | Dispatch due reminders; requires `x-cron-secret` |
-| `POST` | `/api/upi/import` | Import one UTF-8 CSV (`file` form field, max 5 MB / 500 rows) |
-| `POST` | `/api/upi/reconcile` | Score unmatched UPI transactions against outstanding invoices |
-| `GET` | `/api/upi/transactions` | List recent imported transactions |
-
-## Sample request schemas
-
-```json
-// POST /api/invoices
-{
-  "customerName": "Meera Traders",
-  "invoiceDate": "2026-07-25",
-  "dueDate": "2026-08-01",
-  "lineItems": [
-    { "description": "Monthly inventory service", "quantity": 1, "unitPricePaise": 250000 }
-  ]
-}
-```
-
-```csv
-Transaction ID,Amount,Direction,Transaction Date,Payer Name,Payer UPI ID
-UPI-20260725-001,"2,950.00",credit,2026-07-25T10:30:00Z,Meera Traders,meera@upi
-```
-
-`invoices` stores monetary values as integer paise. PostgreSQL generated columns calculate `gst_amount_paise` and `total_paise`; the API does not trust client-calculated totals. `transactions.normalized_transaction_id` is indexed with `pg_trgm` for fuzzy-ID workflows, and duplicate normalized IDs are rejected per tenant.
-
-## Deployment
-
-1. In Vercel, set the project root directory to `frontend` and copy the frontend variables.
-2. In Render, create the service from `render.yaml`, add the secret backend variables, and set `FRONTEND_ORIGIN` to the Vercel deployment URL.
-3. Add the GitHub secrets listed above. Pushes to `main` type-check, deploy Vercel, then trigger Render.
-4. The workflow sends the protected reminder trigger at 09:00 IST. Set `API_BASE_URL` to the Render public URL without a trailing slash.
-
-## Security and operational notes
-
-- Supabase RLS confines every business row to `auth.uid()`; additional database triggers reject invoice relations that cross tenants.
-- The backend validates JWTs with Supabase Auth before every protected operation and rate-limits the public API.
-- CSV parsing is memory-capped, limits rows and record size, sanitizes filenames, returns row-level validation errors, and flags future timestamps.
-- PDF storage is private. The API rolls back the invoice record if PDF upload fails; production monitoring should alert on any failed storage/database update for orphan cleanup.
-- Fuzzy reconciliation auto-matches only high-confidence, unambiguous candidates. Medium-confidence results remain in `review` for a human.
-- Configure a real notification webhook before selecting external reminder channels. `in_app` reminders are safe without one.
-
-## Validation
+The demo application deploys and runs **with ZERO login and ZERO API key**.
 
 ```bash
-npm run check
-python -m compileall -q voice/voice_to_invoice.py
+# 1. Install dependencies
+npm install
+
+# 2. Run local development server
+npm run dev
+
+# Open http://localhost:3000 or http://localhost:3000/vyapari
 ```
 
-Commit the generated `package-lock.json` after the first `npm install`; then replace CI's `npm install` commands with `npm ci` for fully locked dependency builds.
+---
+
+## 🧪 Testing & Verification
+
+```bash
+# Run Vitest unit test suite (invoiceParser + reconcile bands)
+npm test
+
+# Run TypeScript typechecking
+npm run check
+
+# Build production bundle
+npm run build
+```
+
+---
+
+## ⚡ 5-Minute Vercel Deployment Guide
+
+1. Push this repository to your GitHub account:
+   ```bash
+   git add .
+   git commit -m "feat: Vyapari WhatsApp assistant, fuzzy UPI reconciler & GST ledger"
+   git push origin main
+   ```
+2. Go to [Vercel Dashboard](https://vercel.com/new) and click **Import Project**.
+3. Select your repository, set root directory to `./frontend` (or default root with workspace detection).
+4. Click **Deploy**. (No environment variables required for standard demo mode!)
+
+---
+
+## 📋 API PREREQUISITES & DISCLOSURES
+
+- **Deploy / Live Demo:** **None** — deploys and runs the full interactive demo with **NO login and NO API key** (deterministic parser + fuzzy reconciliation formula + `localStorage` + seeded bank SMS data).
+- **Live Mode (Optional):** `OPENAI_API_KEY` (optional) for enhanced natural language parsing in server routes.
+- **Production WhatsApp Cloud API Disclosure:** A real WhatsApp production implementation requires Meta WhatsApp Cloud API (business verification takes ~2–7 business days).
+- **Production Indic Voice Disclosure:** Production Indic voice requires Bhashini (currently in PoC/non-production tier, not free for enterprise production).
+- **Demo Scope:** **Neither WhatsApp Cloud API nor Bhashini is required or used in this web/PWA demo**; this application mimics the full WhatsApp UX natively with zero external cloud dependencies.
+
+---
+
+## 🎙️ Web Speech API & Browser Compatibility Notes
+
+- Vyapari implements native feature detection for Web Speech API (`SpeechRecognition` / `webkitSpeechRecognition`).
+- Supported in modern Chrome, Edge, and Android WebView for Hindi (`hi-IN`) and English (`en-IN`) voice-to-text input.
+- If Web Speech API is not supported in the host browser, Vyapari gracefully presents an inline typing interface without interrupting the workflow.
+- Transcripts in Devanagari script are automatically transliterated to Latin script before passing into the deterministic parser.
+
+---
+
+## 🧮 Fuzzy UPI Reconciliation Scoring Formula
+
+Reconciliation calculates similarity scores between incoming Bank SMS strings and open invoices using:
+
+$$\text{Score} = 0.5 \times \text{amountExact} + 0.3 \times \text{JaroWinkler}(\text{payerName}, \text{customerName}) + 0.2 \times \text{keywordOverlap}(\text{narration}, \text{invoiceContext})$$
+
+### Match Bands:
+1. **`AUTO_MATCH` (Score $\ge 0.8$):** High confidence match. Automatically matches invoice and offers 1-click confirmation.
+2. **`ASK_TO_CONFIRM` (Score $0.5 - 0.79$):** Partial or ambiguous match (e.g. truncated SMS "Rs 100 from R. K."). Prompts merchant to confirm match.
+3. **`NO_MATCH` (Score $< 0.5$):** Insufficient confidence. Flagged as un-matched.
+
+---
+
+## 🤖 How Codex Built This
+
+1. **Architecture Planning:** Designed a mobile-first WhatsApp chat layout backed by deterministic parsing to guarantee 100% accuracy on prices and quantities without LLM hallucination risks.
+2. **Grammar Engineering:** Created `/lib/invoiceParser.ts` supporting standard Indian units (`kg`, `g`, `l`, `ml`, `pc`, `pkt`, `dozen`) while flagging unparseable tokens for merchant manual entry.
+3. **Fuzzy Reconciliation Implementation:** Built Jaro-Winkler string distance and keyword overlap algorithms in `/lib/reconcile.ts` to solve messy, truncated bank SMS strings (SBI, Axis, HDFC formats).
+4. **Bilingual & Voice Integration:** Added Web Speech voice recognition and a 1-click English/Hindi toggle across the chat UI, invoices, and GST payment reminder message drafter.
+5. **Testing & QA:** Covered edge cases using Vitest unit tests for parser/reconciliation bands and Playwright for E2E smoke verification.
+
+---
+
+## 📹 5-Line Demo Video Script
+
+1. *"Namaste! Meet Vyapari, the WhatsApp-style AI assistant built for 60 million Kirana shops across India."*
+2. *"Just type or speak item lists like '2 kg cheeni 90, 1 Parle-G 10, chai 20' to generate instant WhatsApp-shareable invoices."*
+3. *"Paste messy bank SMS notifications, and our fuzzy matching formula automatically reconciles payments with exact scores."*
+4. *"Track customer dues in 'Who Owes Me' and send polite, text-only GST reminders with a single tap."*
+5. *"Vyapari runs 100% locally with zero login and zero API keys — empowering small businesses across Bharat!"*
