@@ -26,6 +26,8 @@ jobs:
 
       - name: Build Next.js Static Export
         run: npm run build --workspace=frontend
+        env:
+          NEXT_EXPORT: 'true'
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
