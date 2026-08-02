@@ -1,10 +1,27 @@
-# Vyapari — WhatsApp-Style Kirana Assistant
+# Vyapari — WhatsApp-Style Kirana Assistant (Full-Stack Supabase & Neon)
 > **TRACK:** AI Agents for Bharat's Businesses  
 > **Tagline:** Plain-language invoicing, fuzzy UPI reconciliation, GST reminders, and bilingual Hindi voice assistant for Kirana stores.
 
 ---
 
+## 🌐 Free Live Web Application & Repository
+- **GitHub Repository:** [https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.git](https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.git)
+- **GitHub Pages Live App:** [https://nisarg2204ai.github.io/VYAPAARSAATHI.AI/](https://nisarg2204ai.github.io/VYAPAARSAATHI.AI/)
+- **Zero-Permission Access:** Open directly in any browser — no logins, authentication, or API keys required!
+
+---
+
+## 🗄️ Full-Stack Database Architecture (Supabase & Serverless Neon PostgreSQL)
+Vyapari is built as a complete full-stack web application supporting dual PostgreSQL cloud databases:
+- **Supabase Integration:** Client & Admin SDK (`@supabase/supabase-js`) in `frontend/lib/supabase.ts` and `backend/src/lib/supabase.ts`.
+- **Neon Serverless PostgreSQL:** Connection pool and serverless driver helper in `backend/src/lib/neon.ts` and `frontend/lib/db.ts`.
+- **SQL Database Migrations:** Production DDL migrations in `supabase/migrations/202608020001_neon_supabase_sync.sql` defining `invoices`, `invoice_items`, `reconciliations`, and `gst_ledger` tables with public Row-Level Security (RLS) policies.
+- **Graceful Zero-Permission Fallback:** When database environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEON_DATABASE_URL`) are omitted, the application operates 100% locally with `localStorage` and seeded data (`/data/seed.json`).
+
+---
+
 ## 🚀 Quick Start (Local Run)
+
 
 The demo application deploys and runs **with ZERO login and ZERO API key**.
 
