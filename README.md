@@ -5,8 +5,8 @@
 ---
 
 ## 🌐 Free Live Web Application & Repository
-- **GitHub Repository:** [https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.git](https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.git)
-- **GitHub Pages Live App:** [https://nisarg2204ai.github.io/VYAPAARSAATHI.AI/](https://nisarg2204ai.github.io/VYAPAARSAATHI.AI/)
+- **GitHub Repository:** [https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.io](https://github.com/Nisarg2204ai/VYAPAARSAATHI.AI.io)
+- **GitHub Pages Live App:** [https://nisarg2204ai.github.io/VYAPAARSAATHI.AI.io/](https://nisarg2204ai.github.io/VYAPAARSAATHI.AI.io/)
 - **Zero-Permission Access:** Open directly in any browser — no logins, authentication, or API keys required!
 
 ---
